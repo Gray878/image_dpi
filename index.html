@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image DPI Checker & Converter - Browser Based Image DPI Tool</title>
+    <meta
+      name="description"
+      content="Check image DPI, pixel size, print size, and change JPEG or PNG DPI metadata in your browser. Private, fast, and no upload required."
+    />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="Image DPI Checker & Converter" />
+    <meta
+      property="og:description"
+      content="Check and change image DPI metadata locally in your browser."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="preload" href="assets/icons/upload-image.png" as="image" />
+    <link rel="stylesheet" href="assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#tool">Skip to image DPI tool</a>
+
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Main navigation">
+        <a class="brand" href="#" aria-label="Image DPI Tool home">
+          <span class="brand-mark" aria-hidden="true">
+            <span></span>
+          </span>
+          <span>Image DPI Tool</span>
+        </a>
+        <div class="nav-links" aria-label="Page sections">
+          <a href="#tool">Tool</a>
+          <a href="#how">How it works</a>
+          <a href="#dpi">DPI guide</a>
+          <a href="#faq">FAQ</a>
+        </div>
+        <button class="theme-button" type="button" id="themeToggle" aria-label="Toggle dark theme">
+          Theme
+        </button>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero-section" id="tool" aria-labelledby="heroTitle">
+        <div class="hero-copy reveal">
+          <p class="eyebrow">Private browser-based image DPI metadata tool</p>
+          <h1 id="heroTitle">Image DPI Checker &amp; Converter</h1>
+          <p class="hero-lede">
+            Quickly check image DPI, pixel dimensions, file details, and change JPEG or PNG DPI metadata to
+            72, 96, 150, 300, 600, or a custom value.
+          </p>
+          <div class="trust-row" aria-label="Privacy and processing details">
+            <span>Local browser processing</span>
+            <span>No server upload</span>
+            <span>Metadata-only by default</span>
+          </div>
+        </div>
+
+        <section class="tool-card reveal" aria-label="Upload image DPI tool">
+          <div
+            class="drop-zone"
+            id="dropZone"
+            tabindex="0"
+            role="button"
+            aria-label="Choose, drop, or paste an image"
+          >
+            <input id="fileInput" type="file" accept="image/*" hidden />
+            <div class="upload-empty" id="uploadEmpty">
+              <span class="art-icon art-upload" aria-hidden="true"></span>
+              <div>
+                <h2>Drop an image here</h2>
+                <p>Click to choose a file, drag it in, or paste from your clipboard.</p>
+              </div>
+              <span class="privacy-chip">Images stay on this device</span>
+            </div>
+            <div class="upload-preview is-hidden" id="uploadPreview">
+              <img id="previewImage" alt="Selected image preview" />
+              <div class="preview-copy">
+                <span class="file-name" id="fileName">No file selected</span>
+                <span class="file-note" id="fileNote">Ready to inspect image DPI metadata.</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="status-line" id="statusLine" role="status" aria-live="polite">
+            Choose a JPEG or PNG for the most reliable DPI metadata result.
+          </div>
+
+          <div class="metrics-grid" aria-label="Image information">
+            <div class="metric">
+              <span>Original size</span>
+              <strong id="dimensionValue">-</strong>
+            </div>
+            <div class="metric">
+              <span>File size</span>
+              <strong id="fileSizeValue">-</strong>
+            </div>
+            <div class="metric">
+              <span>Format</span>
+              <strong id="formatValue">-</strong>
+            </div>
+            <div class="metric metric-accent">
+              <span>Current DPI</span>
+              <strong id="dpiValue">-</strong>
+            </div>
+          </div>
+
+          <div class="convert-panel">
+            <div class="panel-heading">
+              <div>
+                <h2>Change DPI metadata</h2>
+                <p>Pixel dimensions stay unchanged in metadata-only mode.</p>
+              </div>
+              <span class="mode-pill">Metadata-only</span>
+            </div>
+
+            <div class="dpi-controls" aria-label="Target DPI presets">
+              <button class="dpi-preset" type="button" data-dpi="72">72</button>
+              <button class="dpi-preset" type="button" data-dpi="96">96</button>
+              <button class="dpi-preset" type="button" data-dpi="150">150</button>
+              <button class="dpi-preset is-active" type="button" data-dpi="300">300</button>
+              <button class="dpi-preset" type="button" data-dpi="600">600</button>
+            </div>
+
+            <label class="dpi-input-wrap" for="dpiInput">
+              <span>Target DPI</span>
+              <input id="dpiInput" type="number" inputmode="numeric" min="1" max="2400" value="300" />
+            </label>
+
+            <div class="action-row">
+              <button class="primary-button" type="button" id="downloadButton" disabled>
+                Download converted image
+              </button>
+              <button class="ghost-button" type="button" id="resetButton" disabled>Reset</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="result-card reveal" aria-label="Before and after DPI result">
+          <div class="result-head">
+            <span class="art-icon art-target" aria-hidden="true"></span>
+            <div>
+              <p class="eyebrow">DPI report</p>
+              <h2>Before / After</h2>
+            </div>
+          </div>
+
+          <div class="compare-grid">
+            <div class="compare-box">
+              <span>Before</span>
+              <strong id="beforeDpi">-</strong>
+              <small>Stored DPI in the original file</small>
+            </div>
+            <div class="compare-arrow" aria-hidden="true"></div>
+            <div class="compare-box compare-after">
+              <span>After</span>
+              <strong id="afterDpi">300 DPI</strong>
+              <small>New metadata value for download</small>
+            </div>
+          </div>
+
+          <div class="truth-note">
+            <strong>Pixels unchanged</strong>
+            <span id="pixelTruth">Upload an image to see the exact pixel dimensions.</span>
+          </div>
+
+          <div class="print-table" aria-label="Estimated print sizes">
+            <div class="print-row print-heading">
+              <span>DPI</span>
+              <span>Estimated print size</span>
+            </div>
+            <div class="print-row">
+              <span>150</span>
+              <span id="print150">-</span>
+            </div>
+            <div class="print-row">
+              <span>300</span>
+              <span id="print300">-</span>
+            </div>
+            <div class="print-row">
+              <span id="targetPrintLabel">Target</span>
+              <span id="printTarget">-</span>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="content-section process-section" id="how" aria-labelledby="howTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Simple workflow</p>
+          <h2 id="howTitle">How it works</h2>
+        </div>
+        <div class="step-grid">
+          <article class="info-card reveal">
+            <span class="art-icon art-upload" aria-hidden="true"></span>
+            <h3>Upload locally</h3>
+            <p>Select, drop, or paste an image. The file is read in your browser and is not sent to a server.</p>
+          </article>
+          <article class="info-card reveal">
+            <span class="art-icon art-target" aria-hidden="true"></span>
+            <h3>Inspect DPI</h3>
+            <p>See pixel dimensions, file size, format, stored DPI metadata, and estimated print sizes.</p>
+          </article>
+          <article class="info-card reveal">
+            <span class="art-icon art-download" aria-hidden="true"></span>
+            <h3>Download metadata</h3>
+            <p>Choose a target DPI and download a copy with updated metadata while keeping the same pixels.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section split-section" id="dpi" aria-labelledby="dpiTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow">Image DPI guide</p>
+          <h2 id="dpiTitle">Why DPI matters</h2>
+          <p>
+            Image DPI is often a stored metadata value. Real print sharpness depends on how many pixels are
+            available for the physical size you want.
+          </p>
+        </div>
+        <div class="use-grid">
+          <article class="use-card reveal">
+            <span class="art-icon art-print" aria-hidden="true"></span>
+            <h3>Print</h3>
+            <p>For print, effective DPI is calculated from pixel dimensions divided by the intended print size.</p>
+          </article>
+          <article class="use-card reveal">
+            <span class="art-icon art-privacy" aria-hidden="true"></span>
+            <h3>Web</h3>
+            <p>Browsers mainly care about pixel dimensions, not the stored 72 DPI or 96 DPI label.</p>
+          </article>
+          <article class="use-card reveal">
+            <span class="art-icon art-target" aria-hidden="true"></span>
+            <h3>Design</h3>
+            <p>Some print shops, publishers, and upload forms require a 300 DPI tag even when pixels are unchanged.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section faq-section" id="faq" aria-labelledby="faqTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow">FAQ</p>
+          <h2 id="faqTitle">Image DPI questions</h2>
+        </div>
+        <div class="faq-list">
+          <details class="reveal" open>
+            <summary>What is image DPI?</summary>
+            <p>
+              Image DPI is a density value stored in image metadata. It tells print or design software how many
+              pixels should map to one inch, but it does not create new detail by itself.
+            </p>
+          </details>
+          <details class="reveal">
+            <summary>Does changing 72 DPI to 300 DPI improve quality?</summary>
+            <p>
+              No. Metadata-only DPI conversion changes the label, not the pixels. A sharper print usually needs
+              more pixels or a smaller physical print size.
+            </p>
+          </details>
+          <details class="reveal">
+            <summary>When is a 300 DPI converter useful?</summary>
+            <p>
+              It is useful when a printer, submission form, or design workflow requires a 300 DPI metadata tag and
+              your image already has enough pixels for the intended print size.
+            </p>
+          </details>
+          <details class="reveal">
+            <summary>Are my images uploaded?</summary>
+            <p>
+              No. This page reads and rewrites supported image files in the browser. The image does not need to
+              leave your device.
+            </p>
+          </details>
+          <details class="reveal">
+            <summary>Which formats are supported?</summary>
+            <p>
+              DPI checking works best for JPEG and PNG. Metadata-only DPI conversion currently supports JPEG and
+              PNG. Other formats can be previewed, but DPI metadata may not be reliably readable in the browser.
+            </p>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="#">
+          <span class="brand-mark" aria-hidden="true"><span></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <p>Browser-based image DPI checker and metadata converter.</p>
+      </div>
+      <div class="footer-links">
+        <a href="#tool">Image DPI Checker</a>
+        <a href="#dpi">DPI Guide</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <p class="copyright">Copyright <span id="year"></span> Image DPI Tool.</p>
+    </footer>
+
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/dpi-tools.js"></script>
+    <script src="assets/app.js"></script>
+  </body>
+</html>
