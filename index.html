@@ -11,24 +11,29 @@
     <meta name="application-name" content="Image DPI Tool" />
     <meta name="theme-color" content="#3f5bf6" />
     <meta name="robots" content="index,follow" />
+    <link rel="canonical" href="https://imagedpi.net/" />
     <meta property="og:title" content="Image DPI Checker & 300 DPI Converter" />
     <meta
       property="og:description"
       content="Check image DPI, print size, and convert JPG or PNG DPI metadata locally in your browser."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://imagedpi.net/" />
+    <meta property="og:image" content="https://imagedpi.net/assets/logo/image-dpi-logo-512.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Image DPI Checker & 300 DPI Converter" />
     <meta
       name="twitter:description"
       content="Private browser-based DPI checker and metadata converter for JPG and PNG images."
     />
+    <meta name="twitter:image" content="https://imagedpi.net/assets/logo/image-dpi-logo-512.png" />
     <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=logo-2" />
     <link rel="preload" href="assets/icons/upload-files.png" as="image" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#tool">Skip to image DPI tool</a>
+    <div class="cursor-scan" id="cursorScan" aria-hidden="true"></div>
 
     <header class="site-header">
       <nav class="nav-shell" aria-label="Main navigation">
@@ -505,10 +510,11 @@
         "@context": "https://schema.org",
         "@type": "WebApplication",
         "name": "Image DPI Checker & Converter",
+        "url": "https://imagedpi.net/",
         "applicationCategory": "MultimediaApplication",
         "operatingSystem": "Any modern browser",
         "description": "A private browser-based tool to check image DPI, pixel size, megapixels, aspect ratio, print size, and convert JPG or PNG DPI metadata.",
-        "image": "assets/logo/favicon.svg",
+        "image": "https://imagedpi.net/assets/logo/image-dpi-logo-512.png",
         "isAccessibleForFree": true,
         "offers": {
           "@type": "Offer",

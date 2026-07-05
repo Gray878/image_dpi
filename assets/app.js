@@ -11,10 +11,13 @@
     convertedBlob: null
   };
 
+  var cursorScan = document.getElementById("cursorScan");
+  var heroSection = document.querySelector(".hero-section");
   var dropZone = document.getElementById("dropZone");
   var fileInput = document.getElementById("fileInput");
   var pickButton = document.getElementById("pickButton");
   var pasteShortcut = document.getElementById("pasteShortcut");
+  var pasteModifierKey = document.getElementById("pasteModifierKey");
   var uploadEmpty = document.getElementById("uploadEmpty");
   var uploadPreview = document.getElementById("uploadPreview");
   var previewImage = document.getElementById("previewImage");
@@ -47,6 +50,87 @@
   var downloadButton = document.getElementById("downloadButton");
   var resetButton = document.getElementById("resetButton");
   var presetButtons = Array.prototype.slice.call(document.querySelectorAll(".dpi-preset"));
+
+  function initPointerEffects() {
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    var coarsePointer = window.matchMedia("(hover: none), (pointer: coarse)");
+    if (!cursorScan || !heroSection || reducedMotion.matches || coarsePointer.matches) return;
+
+    var pointer = {
+      active: false,
+      targetX: window.innerWidth / 2,
+      targetY: window.innerHeight / 2,
+      currentX: window.innerWidth / 2,
+      currentY: window.innerHeight / 2
+    };
+    var animationFrame = 0;
+
+    function updateHeroGrid() {
+      var rect = heroSection.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      var centerX = rect.left + rect.width / 2;
+      var centerY = rect.top + rect.height / 2;
+      var distanceX = (pointer.currentX - centerX) / rect.width;
+      var distanceY = (pointer.currentY - centerY) / rect.height;
+      heroSection.style.setProperty("--grid-shift-x", (distanceX * -18).toFixed(2) + "px");
+      heroSection.style.setProperty("--grid-shift-y", (distanceY * -12).toFixed(2) + "px");
+    }
+
+    function renderPointerEffects() {
+      pointer.currentX += (pointer.targetX - pointer.currentX) * 0.22;
+      pointer.currentY += (pointer.targetY - pointer.currentY) * 0.22;
+      cursorScan.style.setProperty("--cursor-x", pointer.currentX.toFixed(2) + "px");
+      cursorScan.style.setProperty("--cursor-y", pointer.currentY.toFixed(2) + "px");
+      updateHeroGrid();
+
+      if (pointer.active) {
+        animationFrame = window.requestAnimationFrame(renderPointerEffects);
+      } else {
+        animationFrame = 0;
+      }
+    }
+
+    function startPointerLoop() {
+      if (!animationFrame) {
+        animationFrame = window.requestAnimationFrame(renderPointerEffects);
+      }
+    }
+
+    function deactivatePointer() {
+      pointer.active = false;
+      cursorScan.classList.remove("is-active");
+    }
+
+    document.addEventListener("pointermove", function (event) {
+      if (event.pointerType === "touch") return;
+      pointer.active = true;
+      pointer.targetX = event.clientX;
+      pointer.targetY = event.clientY;
+      cursorScan.classList.add("is-active");
+      startPointerLoop();
+    });
+
+    document.addEventListener("pointerleave", deactivatePointer);
+    document.addEventListener("pointerout", function (event) {
+      if (!event.relatedTarget) deactivatePointer();
+    });
+
+    window.addEventListener("blur", deactivatePointer);
+
+    dropZone.addEventListener("pointermove", function (event) {
+      if (event.pointerType === "touch") return;
+      var rect = dropZone.getBoundingClientRect();
+      var x = ((event.clientX - rect.left) / rect.width) * 100;
+      var y = ((event.clientY - rect.top) / rect.height) * 100;
+      dropZone.style.setProperty("--spotlight-x", x.toFixed(2) + "%");
+      dropZone.style.setProperty("--spotlight-y", y.toFixed(2) + "%");
+    });
+
+    dropZone.addEventListener("pointerleave", function () {
+      dropZone.style.setProperty("--spotlight-x", "50%");
+      dropZone.style.setProperty("--spotlight-y", "50%");
+    });
+  }
 
   function formatBytes(bytes) {
     if (!bytes) return "0 B";
@@ -458,6 +542,10 @@
   resetButton.addEventListener("click", resetTool);
 
   document.getElementById("year").textContent = String(new Date().getFullYear());
+  if (/Mac|iPhone|iPad|iPod/i.test(navigator.platform)) {
+    pasteModifierKey.textContent = "Cmd";
+  }
+  initPointerEffects();
   updatePrintReadout();
   updateDownloadState();
   window.setTimeout(function () {
