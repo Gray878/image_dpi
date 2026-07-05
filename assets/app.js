@@ -11,7 +11,6 @@
     convertedBlob: null
   };
 
-  var cursorScan = document.getElementById("cursorScan");
   var heroSection = document.querySelector(".hero-section");
   var dropZone = document.getElementById("dropZone");
   var fileInput = document.getElementById("fileInput");
@@ -50,40 +49,133 @@
   var downloadButton = document.getElementById("downloadButton");
   var resetButton = document.getElementById("resetButton");
   var presetButtons = Array.prototype.slice.call(document.querySelectorAll(".dpi-preset"));
+  var turnstileSiteKeyMeta = document.querySelector("meta[name='turnstile-site-key']");
+  var turnstileSiteKey = turnstileSiteKeyMeta ? turnstileSiteKeyMeta.content.trim() : "";
+  var turnstilePanel = document.getElementById("turnstilePanel");
+  var turnstileWidget = document.getElementById("turnstileWidget");
+  var turnstileState = {
+    required: Boolean(turnstileSiteKey),
+    loading: false,
+    failed: false,
+    widgetId: null,
+    token: ""
+  };
 
   function initPointerEffects() {
     var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     var coarsePointer = window.matchMedia("(hover: none), (pointer: coarse)");
-    if (!cursorScan || !heroSection || reducedMotion.matches || coarsePointer.matches) return;
+    if (!heroSection || reducedMotion.matches || coarsePointer.matches) return;
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+    if (!context) return;
+
+    canvas.className = "hero-grid-canvas";
+    canvas.setAttribute("aria-hidden", "true");
+    heroSection.insertBefore(canvas, heroSection.firstChild);
+    heroSection.classList.add("has-grid-canvas");
 
     var pointer = {
-      active: false,
-      targetX: window.innerWidth / 2,
-      targetY: window.innerHeight / 2,
-      currentX: window.innerWidth / 2,
-      currentY: window.innerHeight / 2
+      targetX: 0,
+      targetY: 0,
+      currentX: 0,
+      currentY: 0,
+      influence: 0,
+      targetInfluence: 0
     };
     var animationFrame = 0;
+    var canvasWidth = 0;
+    var canvasHeight = 0;
+    var pixelRatio = 1;
 
-    function updateHeroGrid() {
-      var rect = heroSection.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      var centerX = rect.left + rect.width / 2;
-      var centerY = rect.top + rect.height / 2;
-      var distanceX = (pointer.currentX - centerX) / rect.width;
-      var distanceY = (pointer.currentY - centerY) / rect.height;
-      heroSection.style.setProperty("--grid-shift-x", (distanceX * -18).toFixed(2) + "px");
-      heroSection.style.setProperty("--grid-shift-y", (distanceY * -12).toFixed(2) + "px");
+    function resizeGridCanvas() {
+      var rect = canvas.getBoundingClientRect();
+      pixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+      canvasWidth = Math.max(1, Math.round(rect.width));
+      canvasHeight = Math.max(1, Math.round(rect.height));
+      canvas.width = Math.round(canvasWidth * pixelRatio);
+      canvas.height = Math.round(canvasHeight * pixelRatio);
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+
+      if (!pointer.targetX && !pointer.targetY) {
+        pointer.targetX = canvasWidth / 2;
+        pointer.targetY = canvasHeight * 0.42;
+        pointer.currentX = pointer.targetX;
+        pointer.currentY = pointer.targetY;
+      }
+
+      drawGrid();
+    }
+
+    function warpPoint(x, y) {
+      if (pointer.influence < 0.01) return { x: x, y: y };
+
+      var dx = x - pointer.currentX;
+      var dy = y - pointer.currentY;
+      var distance = Math.sqrt(dx * dx + dy * dy) || 1;
+      var radius = Math.min(260, Math.max(150, canvasWidth * 0.2));
+      var falloff = Math.exp(-(distance * distance) / (radius * radius));
+      var pull = falloff * pointer.influence * 28;
+      var shear = falloff * pointer.influence * 9;
+
+      return {
+        x: x + (dx / distance) * pull - (dy / distance) * shear,
+        y: y + (dy / distance) * pull + (dx / distance) * shear
+      };
+    }
+
+    function drawWarpedLine(startX, startY, endX, endY) {
+      var segments = 18;
+      context.beginPath();
+
+      for (var index = 0; index <= segments; index += 1) {
+        var progress = index / segments;
+        var x = startX + (endX - startX) * progress;
+        var y = startY + (endY - startY) * progress;
+        var warped = warpPoint(x, y);
+
+        if (index === 0) {
+          context.moveTo(warped.x, warped.y);
+        } else {
+          context.lineTo(warped.x, warped.y);
+        }
+      }
+
+      context.stroke();
+    }
+
+    function drawGrid() {
+      var spacing = 34;
+      var padding = spacing * 2;
+      var parallaxX = ((pointer.currentX - canvasWidth / 2) / Math.max(canvasWidth, 1)) * -12 * pointer.influence;
+      var parallaxY = ((pointer.currentY - canvasHeight / 2) / Math.max(canvasHeight, 1)) * -8 * pointer.influence;
+      var startX = -padding + parallaxX;
+      var startY = -padding + parallaxY;
+
+      context.clearRect(0, 0, canvasWidth, canvasHeight);
+      context.lineWidth = 1;
+      context.strokeStyle = "rgba(63, 91, 246, 0.105)";
+
+      for (var x = startX; x <= canvasWidth + padding; x += spacing) {
+        drawWarpedLine(x, -padding, x, canvasHeight + padding);
+      }
+
+      for (var y = startY; y <= canvasHeight + padding; y += spacing) {
+        drawWarpedLine(-padding, y, canvasWidth + padding, y);
+      }
     }
 
     function renderPointerEffects() {
       pointer.currentX += (pointer.targetX - pointer.currentX) * 0.22;
       pointer.currentY += (pointer.targetY - pointer.currentY) * 0.22;
-      cursorScan.style.setProperty("--cursor-x", pointer.currentX.toFixed(2) + "px");
-      cursorScan.style.setProperty("--cursor-y", pointer.currentY.toFixed(2) + "px");
-      updateHeroGrid();
+      pointer.influence += (pointer.targetInfluence - pointer.influence) * 0.2;
+      drawGrid();
 
-      if (pointer.active) {
+      if (
+        Math.abs(pointer.targetX - pointer.currentX) > 0.2 ||
+        Math.abs(pointer.targetY - pointer.currentY) > 0.2 ||
+        Math.abs(pointer.targetInfluence - pointer.influence) > 0.01
+      ) {
         animationFrame = window.requestAnimationFrame(renderPointerEffects);
       } else {
         animationFrame = 0;
@@ -97,16 +189,22 @@
     }
 
     function deactivatePointer() {
-      pointer.active = false;
-      cursorScan.classList.remove("is-active");
+      pointer.targetInfluence = 0;
+      startPointerLoop();
     }
 
     document.addEventListener("pointermove", function (event) {
       if (event.pointerType === "touch") return;
-      pointer.active = true;
-      pointer.targetX = event.clientX;
-      pointer.targetY = event.clientY;
-      cursorScan.classList.add("is-active");
+      var rect = canvas.getBoundingClientRect();
+      var isInHero =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      pointer.targetX = event.clientX - rect.left;
+      pointer.targetY = event.clientY - rect.top;
+      pointer.targetInfluence = isInHero ? 1 : 0;
       startPointerLoop();
     });
 
@@ -116,20 +214,8 @@
     });
 
     window.addEventListener("blur", deactivatePointer);
-
-    dropZone.addEventListener("pointermove", function (event) {
-      if (event.pointerType === "touch") return;
-      var rect = dropZone.getBoundingClientRect();
-      var x = ((event.clientX - rect.left) / rect.width) * 100;
-      var y = ((event.clientY - rect.top) / rect.height) * 100;
-      dropZone.style.setProperty("--spotlight-x", x.toFixed(2) + "%");
-      dropZone.style.setProperty("--spotlight-y", y.toFixed(2) + "%");
-    });
-
-    dropZone.addEventListener("pointerleave", function () {
-      dropZone.style.setProperty("--spotlight-x", "50%");
-      dropZone.style.setProperty("--spotlight-y", "50%");
-    });
+    window.addEventListener("resize", resizeGridCanvas);
+    resizeGridCanvas();
   }
 
   function formatBytes(bytes) {
@@ -247,6 +333,110 @@
     statusLine.dataset.tone = tone || "neutral";
   }
 
+  function renderTurnstile() {
+    turnstileState.loading = false;
+    if (
+      !turnstileState.required ||
+      !turnstileWidget ||
+      turnstileState.widgetId !== null ||
+      !window.turnstile ||
+      typeof window.turnstile.render !== "function"
+    ) {
+      return;
+    }
+
+    try {
+      var widgetId = window.turnstile.render(turnstileWidget, {
+        sitekey: turnstileSiteKey,
+        action: "download",
+        theme: "light",
+        callback: function (token) {
+          turnstileState.token = token || "";
+          if (state.file) {
+            setStatus("Security check passed. You can download the converted image.", "success");
+          }
+          updateDownloadState();
+        },
+        "expired-callback": function () {
+          turnstileState.token = "";
+          if (state.file) {
+            setStatus("Security check expired. Complete it again to download.", "neutral");
+          }
+          updateDownloadState();
+        },
+        "timeout-callback": function () {
+          turnstileState.token = "";
+          if (state.file) {
+            setStatus("Security check timed out. Try again to download.", "neutral");
+          }
+          updateDownloadState();
+        },
+        "error-callback": function () {
+          turnstileState.token = "";
+          if (state.file) {
+            setStatus("Security check could not be completed. Please try again.", "error");
+          }
+          updateDownloadState();
+        }
+      });
+
+      if (widgetId == null) throw new Error("Turnstile widget did not render.");
+      turnstileState.widgetId = widgetId;
+    } catch (error) {
+      handleTurnstileLoadError();
+    }
+  }
+
+  function handleTurnstileLoadError() {
+    turnstileState.loading = false;
+    turnstileState.failed = true;
+    turnstileState.token = "";
+    if (state.file) {
+      setStatus("Security check could not load. Please refresh the page and try again.", "error");
+    }
+    updateDownloadState();
+  }
+
+  function ensureTurnstile() {
+    if (!turnstileState.required || turnstileState.failed || !turnstileWidget || turnstileState.widgetId !== null) {
+      return;
+    }
+    if (window.turnstile && typeof window.turnstile.render === "function") {
+      renderTurnstile();
+      return;
+    }
+    if (turnstileState.loading) return;
+
+    turnstileState.loading = true;
+    var existingScript = document.querySelector("script[data-turnstile-api='true']");
+    if (existingScript) {
+      existingScript.addEventListener("load", renderTurnstile, { once: true });
+      existingScript.addEventListener("error", handleTurnstileLoadError, { once: true });
+      return;
+    }
+
+    var script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    script.defer = true;
+    script.dataset.turnstileApi = "true";
+    script.addEventListener("load", renderTurnstile, { once: true });
+    script.addEventListener("error", handleTurnstileLoadError, { once: true });
+    document.head.appendChild(script);
+  }
+
+  function resetTurnstileChallenge() {
+    turnstileState.token = "";
+    if (
+      turnstileState.required &&
+      turnstileState.widgetId !== null &&
+      window.turnstile &&
+      typeof window.turnstile.reset === "function"
+    ) {
+      window.turnstile.reset(turnstileState.widgetId);
+    }
+  }
+
   function isEditableTarget(target) {
     if (!target || !target.closest) return false;
     return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
@@ -266,10 +456,13 @@
     if (!state.file || !state.arrayBuffer || !state.format) {
       downloadButton.disabled = true;
       resetButton.disabled = true;
+      if (turnstilePanel) turnstilePanel.hidden = true;
       return;
     }
     var supported = state.format.key === "jpeg" || state.format.key === "png";
-    downloadButton.disabled = !supported;
+    if (turnstilePanel) turnstilePanel.hidden = !supported || !turnstileState.required;
+    if (supported) ensureTurnstile();
+    downloadButton.disabled = !supported || (turnstileState.required && !turnstileState.token);
     resetButton.disabled = false;
   }
 
@@ -302,6 +495,7 @@
 
     state.dpi = window.DpiTools.parseDpi(state.arrayBuffer, state.format);
     state.convertedBlob = null;
+    resetTurnstileChallenge();
 
     fileName.textContent = file.name;
     reportFileName.textContent = file.name;
@@ -374,6 +568,11 @@
 
   function downloadConverted() {
     if (!state.file || !state.arrayBuffer || !state.format) return;
+    if (turnstileState.required && !turnstileState.token) {
+      setStatus("Complete the security check before downloading.", "error");
+      updateDownloadState();
+      return;
+    }
 
     var target = getTargetDpi();
     try {
@@ -390,6 +589,8 @@
         URL.revokeObjectURL(url);
       }, 500);
       setStatus("Downloaded a copy with updated DPI metadata. Pixel dimensions were not changed.", "success");
+      resetTurnstileChallenge();
+      updateDownloadState();
       if (window.gsap && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
         window.gsap.fromTo(downloadButton, { scale: 0.98 }, { scale: 1, duration: 0.22, ease: "back.out(2)" });
       }

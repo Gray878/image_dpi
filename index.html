@@ -10,6 +10,8 @@
     />
     <meta name="application-name" content="Image DPI Tool" />
     <meta name="theme-color" content="#3f5bf6" />
+    <!-- Set this to your Cloudflare Turnstile site key to require verification before downloads. -->
+    <meta name="turnstile-site-key" content="" />
     <meta name="robots" content="index,follow" />
     <link rel="canonical" href="https://imagedpi.net/" />
     <meta property="og:title" content="Image DPI Checker & 300 DPI Converter" />
@@ -18,8 +20,10 @@
       content="Check image DPI, print size, and convert JPG or PNG DPI metadata locally in your browser."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Image DPI Tool" />
     <meta property="og:url" content="https://imagedpi.net/" />
     <meta property="og:image" content="https://imagedpi.net/assets/logo/image-dpi-logo-512.png" />
+    <meta property="og:image:alt" content="Image DPI Tool logo" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Image DPI Checker & 300 DPI Converter" />
     <meta
@@ -27,17 +31,18 @@
       content="Private browser-based DPI checker and metadata converter for JPG and PNG images."
     />
     <meta name="twitter:image" content="https://imagedpi.net/assets/logo/image-dpi-logo-512.png" />
+    <meta name="twitter:image:alt" content="Image DPI Tool logo" />
     <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=logo-2" />
+    <link rel="preconnect" href="https://challenges.cloudflare.com" />
     <link rel="preload" href="assets/icons/upload-files.png" as="image" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
   <body>
     <a class="skip-link" href="#tool">Skip to image DPI tool</a>
-    <div class="cursor-scan" id="cursorScan" aria-hidden="true"></div>
 
     <header class="site-header">
       <nav class="nav-shell" aria-label="Main navigation">
-        <a class="brand" href="#" aria-label="Image DPI Tool home">
+        <a class="brand" href="./" aria-label="Image DPI Tool home">
           <span class="brand-mark" aria-hidden="true">
             <span class="brand-mark-inner"></span>
           </span>
@@ -240,6 +245,10 @@
                   <span id="pixelTruth">Upload an image to see the exact pixel dimensions.</span>
                 </div>
               </article>
+            </div>
+
+            <div class="turnstile-panel" id="turnstilePanel" aria-label="Security verification" hidden>
+              <div id="turnstileWidget"></div>
             </div>
 
             <div class="action-row">
@@ -484,7 +493,7 @@
 
     <footer class="site-footer">
       <div>
-        <a class="brand footer-brand" href="#">
+        <a class="brand footer-brand" href="./">
           <span class="brand-mark" aria-hidden="true">
             <span class="brand-mark-inner"></span>
           </span>
@@ -508,25 +517,93 @@
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "Image DPI Checker & Converter",
-        "url": "https://imagedpi.net/",
-        "applicationCategory": "MultimediaApplication",
-        "operatingSystem": "Any modern browser",
-        "description": "A private browser-based tool to check image DPI, pixel size, megapixels, aspect ratio, print size, and convert JPG or PNG DPI metadata.",
-        "image": "https://imagedpi.net/assets/logo/image-dpi-logo-512.png",
-        "isAccessibleForFree": true,
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "featureList": [
-          "Check JPG and PNG DPI metadata",
-          "Convert image metadata to 72, 96, 150, 300, or 600 DPI",
-          "Calculate print size from pixel dimensions",
-          "Show megapixels and aspect ratio",
-          "Process images locally without upload"
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://imagedpi.net/#website",
+            "name": "Image DPI Tool",
+            "url": "https://imagedpi.net/",
+            "description": "Browser-based image DPI checker and metadata converter for JPG and PNG images.",
+            "inLanguage": "en"
+          },
+          {
+            "@type": "WebApplication",
+            "@id": "https://imagedpi.net/#app",
+            "name": "Image DPI Checker & Converter",
+            "url": "https://imagedpi.net/",
+            "applicationCategory": "MultimediaApplication",
+            "operatingSystem": "Any modern browser",
+            "browserRequirements": "Requires JavaScript and a modern browser with local file access.",
+            "description": "A private browser-based tool to check image DPI, pixel size, megapixels, aspect ratio, print size, and convert JPG or PNG DPI metadata.",
+            "image": "https://imagedpi.net/assets/logo/image-dpi-logo-512.png",
+            "isAccessibleForFree": true,
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            },
+            "featureList": [
+              "Check JPG and PNG DPI metadata",
+              "Convert image metadata to 72, 96, 150, 300, or 600 DPI",
+              "Calculate print size from pixel dimensions",
+              "Show megapixels and aspect ratio",
+              "Process images locally without upload"
+            ]
+          },
+          {
+            "@type": "FAQPage",
+            "@id": "https://imagedpi.net/#faq",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "What is image DPI?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Image DPI is metadata that tells print and layout software how many image pixels should fit in one inch. Web browsers mostly use pixel dimensions, while print workflows use effective DPI based on pixels divided by physical size."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Can I convert JPG or PNG to 300 DPI?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Yes. The tool can write a 300 DPI metadata tag to supported JPG and PNG files locally in the browser without uploading the image."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Is 300 DPI good for printing?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "300 DPI is a common print target, but print quality still depends on pixel count. Divide the image pixel dimensions by the intended print size to estimate effective DPI."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Does changing DPI improve image quality?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Changing DPI metadata does not add detail or increase pixels. It changes how compatible software interprets the physical print size."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Are my images uploaded?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "No. The checker and converter run in the browser so selected images stay on the device."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Which formats are supported?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "The tool is focused on JPEG and PNG files because their DPI metadata can be read and rewritten reliably in the browser."
+                }
+              }
+            ]
+          }
         ]
       }
     </script>
