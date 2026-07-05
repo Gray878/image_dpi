@@ -13,6 +13,7 @@
 
   var dropZone = document.getElementById("dropZone");
   var fileInput = document.getElementById("fileInput");
+  var pickButton = document.getElementById("pickButton");
   var uploadEmpty = document.getElementById("uploadEmpty");
   var uploadPreview = document.getElementById("uploadPreview");
   var previewImage = document.getElementById("previewImage");
@@ -317,6 +318,10 @@
   }
 
   dropZone.addEventListener("click", function () {
+    fileInput.click();
+  });
+
+  pickButton.addEventListener("click", function () {
     fileInput.click();
   });
 

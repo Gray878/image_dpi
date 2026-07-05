@@ -17,17 +17,13 @@
       content="Check image DPI, print size, and convert JPG or PNG DPI metadata locally in your browser."
     />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="assets/logo/image-dpi-logo-512.png" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="Image DPI Checker & 300 DPI Converter" />
     <meta
       name="twitter:description"
       content="Private browser-based DPI checker and metadata converter for JPG and PNG images."
     />
-    <meta name="twitter:image" content="assets/logo/image-dpi-logo-512.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png?v=logo-1" />
-    <link rel="apple-touch-icon" sizes="192x192" href="assets/logo/image-dpi-logo-192.png?v=logo-1" />
-    <link rel="preload" href="assets/logo/image-dpi-logo-192.png?v=logo-1" as="image" />
+    <link rel="icon" type="image/svg+xml" href="assets/logo/favicon.svg?v=logo-2" />
     <link rel="preload" href="assets/icons/upload-files.png" as="image" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
@@ -38,7 +34,7 @@
       <nav class="nav-shell" aria-label="Main navigation">
         <a class="brand" href="#" aria-label="Image DPI Tool home">
           <span class="brand-mark" aria-hidden="true">
-            <img src="assets/logo/image-dpi-logo-192.png?v=logo-1" alt="" width="32" height="32" />
+            <span class="brand-mark-inner"></span>
           </span>
           <span>Image DPI Tool</span>
         </a>
@@ -91,7 +87,7 @@
 
           <div class="upload-actions" aria-label="Upload alternatives">
             <span>or</span>
-            <span class="pick-pill">Choose image</span>
+            <button class="pick-pill" id="pickButton" type="button">Choose image</button>
             <span>or press</span>
             <kbd>Ctrl</kbd>
             <span>+</span>
@@ -392,6 +388,13 @@
             </p>
           </details>
           <details class="reveal">
+            <summary>Can I convert JPG or PNG to 300 DPI?</summary>
+            <p>
+              Yes. Upload a JPG or PNG, choose 300 DPI, and download a copy. The tool updates DPI metadata in
+              the browser while keeping the same pixel dimensions.
+            </p>
+          </details>
+          <details class="reveal">
             <summary>Is 300 DPI good for printing?</summary>
             <p>
               300 DPI is a common print target for sharp close-viewed work. Whether your image is good enough
@@ -427,7 +430,7 @@
       <div>
         <a class="brand footer-brand" href="#">
           <span class="brand-mark" aria-hidden="true">
-            <img src="assets/logo/image-dpi-logo-192.png?v=logo-1" alt="" width="32" height="32" />
+            <span class="brand-mark-inner"></span>
           </span>
           <span>Image DPI Tool</span>
         </a>
@@ -435,12 +438,39 @@
       </div>
       <div class="footer-links">
         <a href="#tool">Image DPI Checker</a>
+        <a href="#tool">300 DPI Converter</a>
+        <a href="#print-size">Print Size Calculator</a>
+        <a href="#verify">Verify DPI</a>
         <a href="#dpi">DPI Guide</a>
         <a href="#faq">FAQ</a>
       </div>
       <p class="copyright">Copyright <span id="year"></span> Image DPI Tool.</p>
     </footer>
 
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Image DPI Checker & Converter",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any modern browser",
+        "description": "A private browser-based tool to check image DPI, pixel size, megapixels, aspect ratio, print size, and convert JPG or PNG DPI metadata.",
+        "image": "assets/logo/favicon.svg",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Check JPG and PNG DPI metadata",
+          "Convert image metadata to 72, 96, 150, 300, or 600 DPI",
+          "Calculate print size from pixel dimensions",
+          "Show megapixels and aspect ratio",
+          "Process images locally without upload"
+        ]
+      }
+    </script>
     <script src="assets/vendor/gsap.min.js"></script>
     <script src="assets/dpi-tools.js"></script>
     <script src="assets/app.js"></script>

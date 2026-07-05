@@ -5,6 +5,10 @@
   --blue-dark: #1834d8;
   --blue-soft: #eef1ff;
   --blue-line: #cbd3ff;
+  --green: #168f6a;
+  --green-soft: #e8f8f2;
+  --amber: #b56b12;
+  --amber-soft: #fff3d8;
   --ink: #17214a;
   --muted: #6875aa;
   --surface: #ffffff;
@@ -109,13 +113,57 @@ summary:focus-visible {
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
+  border-radius: 7px;
+  background: linear-gradient(135deg, #3f5bf6 0%, #6780ff 100%);
+  box-shadow: 0 12px 28px rgba(63, 91, 246, 0.2);
 }
 
-.brand-mark img {
+.brand-mark-inner {
+  position: relative;
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  width: 17px;
+  height: 17px;
+  border: 3px solid #ffffff;
+  border-radius: 3px;
+}
+
+.brand-mark-inner::before,
+.brand-mark-inner::after {
+  content: "";
+  position: absolute;
+  border: 3px solid #ffffff;
+  border-radius: 3px;
+  background: transparent;
+}
+
+.brand-mark-inner::before {
+  width: 8px;
+  height: 8px;
+  right: -7px;
+  bottom: -7px;
+}
+
+.brand-mark-inner::after {
+  width: 3px;
+  height: 3px;
+  left: 4px;
+  top: 4px;
+  border-width: 0;
+  background: #ffffff;
+}
+
+.footer .brand-mark {
+  background: #ffffff;
+  box-shadow: none;
+}
+
+.footer .brand-mark-inner,
+.footer .brand-mark-inner::before {
+  border-color: var(--blue);
+}
+
+.footer .brand-mark-inner::after {
+  background: var(--blue);
 }
 
 .nav-links {
@@ -313,7 +361,15 @@ kbd {
 }
 
 .pick-pill {
+  border: 0;
   padding: 0 1.65rem;
+  transition: box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
+}
+
+.pick-pill:hover {
+  background: var(--blue-dark);
+  box-shadow: 0 18px 36px rgba(63, 91, 246, 0.28);
+  transform: translateY(-1px);
 }
 
 kbd {
@@ -478,6 +534,58 @@ kbd {
   padding: 0.75rem 1rem;
   font-family: var(--mono);
   font-weight: 950;
+}
+
+.report-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.85rem;
+  margin-top: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.report-stat {
+  display: grid;
+  align-content: start;
+  gap: 0.34rem;
+  min-height: 138px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--blue);
+  padding: 1rem;
+  box-shadow: 0 12px 30px rgba(63, 91, 246, 0.08);
+}
+
+.report-stat span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.report-stat strong {
+  color: var(--blue);
+  font-family: var(--mono);
+  font-size: clamp(1.15rem, 2vw, 1.45rem);
+  font-weight: 950;
+  line-height: 1.1;
+}
+
+.report-stat small {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.report-stat-accent {
+  border-color: rgba(22, 143, 106, 0.3);
+  background: var(--green-soft);
+}
+
+.report-stat-accent strong {
+  color: var(--green);
 }
 
 .report-grid {
@@ -752,6 +860,71 @@ kbd {
   color: var(--muted);
 }
 
+.size-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #ffffff;
+  box-shadow: 0 14px 34px rgba(63, 91, 246, 0.08);
+}
+
+.size-table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+  color: var(--blue);
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.size-table th,
+.size-table td {
+  padding: 1rem 1.1rem;
+  text-align: left;
+}
+
+.size-table th {
+  background: var(--blue);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 950;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.size-table tbody tr:nth-child(2n) {
+  background: #f7f8ff;
+}
+
+.verify-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.verify-card {
+  border: 1px solid rgba(63, 91, 246, 0.18);
+  border-radius: var(--radius);
+  background: #ffffff;
+  color: var(--blue);
+  padding: clamp(1rem, 2.5vw, 1.4rem);
+  box-shadow: 0 12px 30px rgba(63, 91, 246, 0.08);
+}
+
+.verify-card h3 {
+  margin: 0;
+  color: var(--blue);
+  font-size: clamp(1.35rem, 2.5vw, 1.9rem);
+  font-style: italic;
+  font-weight: 950;
+}
+
+.verify-card p {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+
 .faq-list {
   display: grid;
   gap: 0.8rem;
@@ -818,6 +991,10 @@ kbd {
     grid-template-columns: 1fr;
   }
 
+  .report-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .target-panel {
     justify-self: stretch;
   }
@@ -882,7 +1059,12 @@ kbd {
   }
 
   .step-grid,
-  .use-grid {
+  .use-grid,
+  .verify-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-stats {
     grid-template-columns: 1fr;
   }
 
