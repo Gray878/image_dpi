@@ -16,6 +16,9 @@
   var uploadEmpty = document.getElementById("uploadEmpty");
   var uploadPreview = document.getElementById("uploadPreview");
   var previewImage = document.getElementById("previewImage");
+  var reportPreview = document.getElementById("reportPreview");
+  var reportFileName = document.getElementById("reportFileName");
+  var resultPanel = document.getElementById("resultPanel");
   var fileName = document.getElementById("fileName");
   var fileNote = document.getElementById("fileNote");
   var statusLine = document.getElementById("statusLine");
@@ -25,15 +28,22 @@
   var dpiValue = document.getElementById("dpiValue");
   var beforeDpi = document.getElementById("beforeDpi");
   var afterDpi = document.getElementById("afterDpi");
+  var tableAfterDpi = document.getElementById("tableAfterDpi");
   var pixelTruth = document.getElementById("pixelTruth");
+  var print72 = document.getElementById("print72");
   var print150 = document.getElementById("print150");
   var print300 = document.getElementById("print300");
+  var print600 = document.getElementById("print600");
   var printTarget = document.getElementById("printTarget");
   var targetPrintLabel = document.getElementById("targetPrintLabel");
+  var bar72 = document.getElementById("bar72");
+  var bar150 = document.getElementById("bar150");
+  var bar300 = document.getElementById("bar300");
+  var bar600 = document.getElementById("bar600");
+  var barTarget = document.getElementById("barTarget");
   var dpiInput = document.getElementById("dpiInput");
   var downloadButton = document.getElementById("downloadButton");
   var resetButton = document.getElementById("resetButton");
-  var themeToggle = document.getElementById("themeToggle");
   var presetButtons = Array.prototype.slice.call(document.querySelectorAll(".dpi-preset"));
 
   function formatBytes(bytes) {
@@ -75,6 +85,15 @@
     return w.toFixed(2) + " x " + h.toFixed(2) + " in";
   }
 
+  function setBarWidth(bar, dpi) {
+    if (!bar || !state.image || !dpi) {
+      if (bar) bar.style.width = "0%";
+      return;
+    }
+    var percent = Math.max(7, Math.min(100, Math.round((72 / dpi) * 100)));
+    bar.style.width = percent + "%";
+  }
+
   function baseName(name) {
     return name.replace(/\.[^.]+$/, "");
   }
@@ -96,20 +115,30 @@
     var target = readTargetDpi();
     if (target == null) {
       afterDpi.textContent = "Target DPI";
+      tableAfterDpi.textContent = "Target DPI";
       targetPrintLabel.textContent = "Target";
       printTarget.textContent = "-";
+      setBarWidth(barTarget, null);
       updatePresetState();
       return;
     }
     afterDpi.textContent = target + " DPI";
+    tableAfterDpi.textContent = target + " DPI";
     targetPrintLabel.textContent = target + " DPI";
     if (!state.image) {
       printTarget.textContent = "-";
       return;
     }
+    print72.textContent = printSize(state.image.width, state.image.height, 72);
     print150.textContent = printSize(state.image.width, state.image.height, 150);
     print300.textContent = printSize(state.image.width, state.image.height, 300);
+    print600.textContent = printSize(state.image.width, state.image.height, 600);
     printTarget.textContent = printSize(state.image.width, state.image.height, target);
+    setBarWidth(bar72, 72);
+    setBarWidth(bar150, 150);
+    setBarWidth(bar300, 300);
+    setBarWidth(bar600, 600);
+    setBarWidth(barTarget, target);
   }
 
   function loadImageSize(file) {
@@ -135,9 +164,9 @@
   function animateResult() {
     if (window.gsap && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       window.gsap.fromTo(
-        [".metrics-grid .metric", ".result-card"],
-        { opacity: 0.35, y: 10 },
-        { opacity: 1, y: 0, duration: 0.32, stagger: 0.04, ease: "power2.out" }
+        [".result-dashboard", ".chart-row", ".conversion-table tbody tr"],
+        { opacity: 0.35, y: 14 },
+        { opacity: 1, y: 0, duration: 0.36, stagger: 0.035, ease: "power2.out" }
       );
     }
   }
@@ -171,8 +200,10 @@
       state.image = await loadImageSize(file);
       state.objectUrl = state.image.url;
       previewImage.src = state.objectUrl;
+      reportPreview.src = state.objectUrl;
       uploadEmpty.classList.add("is-hidden");
       uploadPreview.classList.remove("is-hidden");
+      resultPanel.classList.remove("is-hidden");
     } catch (error) {
       state.image = null;
       setStatus(error.message, "error");
@@ -182,6 +213,7 @@
     state.convertedBlob = null;
 
     fileName.textContent = file.name;
+    reportFileName.textContent = file.name;
     fileNote.textContent = "Loaded locally. Ready for metadata-only DPI conversion.";
     dimensionValue.textContent = state.image ? state.image.width + " x " + state.image.height + " px" : "-";
     fileSizeValue.textContent = formatBytes(file.size);
@@ -221,19 +253,30 @@
     };
     fileInput.value = "";
     previewImage.removeAttribute("src");
+    reportPreview.removeAttribute("src");
     uploadPreview.classList.add("is-hidden");
     uploadEmpty.classList.remove("is-hidden");
+    resultPanel.classList.add("is-hidden");
     fileName.textContent = "No file selected";
+    reportFileName.textContent = "Image file";
     fileNote.textContent = "Ready to inspect image DPI metadata.";
     dimensionValue.textContent = "-";
     fileSizeValue.textContent = "-";
     formatValue.textContent = "-";
     dpiValue.textContent = "-";
     beforeDpi.textContent = "-";
+    tableAfterDpi.textContent = readTargetDpi() ? readTargetDpi() + " DPI" : "Target DPI";
     pixelTruth.textContent = "Upload an image to see the exact pixel dimensions.";
+    print72.textContent = "-";
     print150.textContent = "-";
     print300.textContent = "-";
+    print600.textContent = "-";
     printTarget.textContent = "-";
+    setBarWidth(bar72, null);
+    setBarWidth(bar150, null);
+    setBarWidth(bar300, null);
+    setBarWidth(bar600, null);
+    setBarWidth(barTarget, null);
     setStatus("Choose a JPEG or PNG for the most reliable DPI metadata result.", "neutral");
     updateDownloadState();
   }
@@ -338,23 +381,6 @@
 
   downloadButton.addEventListener("click", downloadConverted);
   resetButton.addEventListener("click", resetTool);
-
-  themeToggle.addEventListener("click", function () {
-    document.documentElement.classList.toggle("theme-dark");
-    try {
-      localStorage.setItem("imageDpiTheme", document.documentElement.classList.contains("theme-dark") ? "dark" : "light");
-    } catch (error) {
-      // Theme persistence is optional.
-    }
-  });
-
-  try {
-    if (localStorage.getItem("imageDpiTheme") === "dark") {
-      document.documentElement.classList.add("theme-dark");
-    }
-  } catch (error) {
-    // Ignore private browsing storage restrictions.
-  }
 
   document.getElementById("year").textContent = String(new Date().getFullYear());
   updatePrintReadout();
