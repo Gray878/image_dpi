@@ -252,12 +252,12 @@ p {
 }
 
 h1 {
-  max-width: 11ch;
+  max-width: 12ch;
   margin: 0 auto;
   color: var(--blue);
-  font-size: clamp(3rem, 7vw, 5.6rem);
-  font-weight: 950;
-  line-height: 0.92;
+  font-size: clamp(2.85rem, 6vw, 4.85rem);
+  font-weight: 800;
+  line-height: 0.98;
   letter-spacing: 0;
 }
 
@@ -336,10 +336,9 @@ h1 {
 .upload-empty h2 {
   margin: 0;
   color: var(--blue);
-  font-size: clamp(1.8rem, 4vw, 2.75rem);
-  font-style: italic;
-  font-weight: 950;
-  line-height: 1.05;
+  font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+  font-weight: 750;
+  line-height: 1.16;
 }
 
 .upload-empty p,
@@ -356,9 +355,9 @@ h1 {
 
 .upload-empty p {
   max-width: 31rem;
-  margin: 0.8rem 0 0;
-  color: var(--blue);
-  font-weight: 650;
+  margin: 0.55rem 0 0;
+  color: var(--muted);
+  font-weight: 500;
 }
 
 .upload-preview {
@@ -1500,7 +1499,7 @@ kbd {
   }
 
   h1 {
-    font-size: clamp(2.75rem, 15vw, 3.3rem);
+    font-size: clamp(2.35rem, 12vw, 2.9rem);
   }
 
   .drop-zone {
