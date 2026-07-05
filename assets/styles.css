@@ -109,57 +109,13 @@ summary:focus-visible {
   width: 32px;
   height: 32px;
   flex: 0 0 32px;
-  border-radius: 7px;
-  background: linear-gradient(135deg, #3f5bf6 0%, #6780ff 100%);
-  box-shadow: 0 12px 28px rgba(63, 91, 246, 0.2);
 }
 
-.brand-mark-inner {
-  position: relative;
+.brand-mark img {
   display: block;
-  width: 17px;
-  height: 17px;
-  border: 3px solid #ffffff;
-  border-radius: 3px;
-}
-
-.brand-mark-inner::before,
-.brand-mark-inner::after {
-  content: "";
-  position: absolute;
-  border: 3px solid #ffffff;
-  border-radius: 3px;
-  background: transparent;
-}
-
-.brand-mark-inner::before {
-  width: 8px;
-  height: 8px;
-  right: -7px;
-  bottom: -7px;
-}
-
-.brand-mark-inner::after {
-  width: 3px;
-  height: 3px;
-  left: 4px;
-  top: 4px;
-  border-width: 0;
-  background: #ffffff;
-}
-
-.footer .brand-mark {
-  background: #ffffff;
-  box-shadow: none;
-}
-
-.footer .brand-mark-inner,
-.footer .brand-mark-inner::before {
-  border-color: var(--blue);
-}
-
-.footer .brand-mark-inner::after {
-  background: var(--blue);
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .nav-links {

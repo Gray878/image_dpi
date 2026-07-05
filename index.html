@@ -3,18 +3,31 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Image DPI Checker & Converter - Browser Based Image DPI Tool</title>
+    <title>Image DPI Checker & 300 DPI Converter - No Upload</title>
     <meta
       name="description"
-      content="Check image DPI, pixel size, print size, and change JPEG or PNG DPI metadata in your browser. Private, fast, and no upload required."
+      content="Check image DPI, pixel size, megapixels, aspect ratio, and print size. Convert JPG or PNG to 300 DPI metadata in your browser with no upload."
     />
+    <meta name="application-name" content="Image DPI Tool" />
+    <meta name="theme-color" content="#3f5bf6" />
     <meta name="robots" content="index,follow" />
-    <meta property="og:title" content="Image DPI Checker & Converter" />
+    <meta property="og:title" content="Image DPI Checker & 300 DPI Converter" />
     <meta
       property="og:description"
-      content="Check and change image DPI metadata locally in your browser."
+      content="Check image DPI, print size, and convert JPG or PNG DPI metadata locally in your browser."
     />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="assets/logo/image-dpi-logo-512.png" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Image DPI Checker & 300 DPI Converter" />
+    <meta
+      name="twitter:description"
+      content="Private browser-based DPI checker and metadata converter for JPG and PNG images."
+    />
+    <meta name="twitter:image" content="assets/logo/image-dpi-logo-512.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/logo/favicon-32.png?v=logo-1" />
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/logo/image-dpi-logo-192.png?v=logo-1" />
+    <link rel="preload" href="assets/logo/image-dpi-logo-192.png?v=logo-1" as="image" />
     <link rel="preload" href="assets/icons/upload-files.png" as="image" />
     <link rel="stylesheet" href="assets/styles.css" />
   </head>
@@ -25,7 +38,7 @@
       <nav class="nav-shell" aria-label="Main navigation">
         <a class="brand" href="#" aria-label="Image DPI Tool home">
           <span class="brand-mark" aria-hidden="true">
-            <span class="brand-mark-inner"></span>
+            <img src="assets/logo/image-dpi-logo-192.png?v=logo-1" alt="" width="32" height="32" />
           </span>
           <span>Image DPI Tool</span>
         </a>
@@ -33,6 +46,8 @@
           <a href="#tool">Tool</a>
           <a href="#how">How it works</a>
           <a href="#dpi">DPI guide</a>
+          <a href="#print-size">Print sizes</a>
+          <a href="#verify">Verify DPI</a>
           <a href="#faq">FAQ</a>
         </div>
       </nav>
@@ -44,8 +59,8 @@
           <p class="eyebrow">Private browser-based image DPI metadata tool</p>
           <h1 id="heroTitle">Image DPI Checker &amp; Converter</h1>
           <p class="hero-lede">
-            Check image DPI, change DPI metadata, and download a converted copy. Your image is processed
-            locally in the browser and is not uploaded to a server.
+            Check image DPI, pixel dimensions, megapixels, aspect ratio, and estimated print size. Change JPG
+            or PNG DPI metadata to 300 DPI without uploading your image.
           </p>
         </div>
 
@@ -120,6 +135,29 @@
                   <input id="dpiInput" type="number" inputmode="numeric" min="1" max="2400" value="300" />
                 </label>
               </div>
+            </div>
+
+            <div class="report-stats" aria-label="Image quality and print readiness summary">
+              <article class="report-stat">
+                <span>Megapixels</span>
+                <strong id="megapixelsValue">-</strong>
+                <small id="megapixelsNote">Upload an image to calculate total pixels.</small>
+              </article>
+              <article class="report-stat">
+                <span>Aspect ratio</span>
+                <strong id="aspectRatioValue">-</strong>
+                <small id="aspectRatioNote">Reduced from the image width and height.</small>
+              </article>
+              <article class="report-stat report-stat-accent">
+                <span>300 DPI capacity</span>
+                <strong id="printCapacityValue">-</strong>
+                <small id="printCapacityNote">Largest print size at 300 DPI without resampling.</small>
+              </article>
+              <article class="report-stat">
+                <span>Conversion support</span>
+                <strong id="supportStatus">-</strong>
+                <small id="supportNote">JPEG and PNG can be rewritten locally.</small>
+              </article>
             </div>
 
             <div class="report-grid">
@@ -199,6 +237,7 @@
               <button class="primary-button" type="button" id="downloadButton" disabled>
                 Download converted image
               </button>
+              <button class="ghost-button" type="button" id="copyReportButton" disabled>Copy report</button>
               <button class="ghost-button" type="button" id="resetButton" disabled>Reset</button>
             </div>
           </section>
@@ -258,6 +297,87 @@
         </div>
       </section>
 
+      <section class="content-section print-size-section" id="print-size" aria-labelledby="printSizeTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow">300 DPI print size calculator</p>
+          <h2 id="printSizeTitle">How many pixels do you need?</h2>
+          <p>
+            A 300 DPI metadata tag is useful for print workflows, but the real limit is still pixel count. Use
+            this quick table to estimate whether your image has enough pixels for common print sizes.
+          </p>
+        </div>
+        <div class="size-table-wrap reveal">
+          <table class="size-table">
+            <thead>
+              <tr>
+                <th>Print size</th>
+                <th>Pixels needed at 300 DPI</th>
+                <th>Typical use</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>4 x 6 in</td>
+                <td>1200 x 1800 px</td>
+                <td>Photo prints and postcards</td>
+              </tr>
+              <tr>
+                <td>5 x 7 in</td>
+                <td>1500 x 2100 px</td>
+                <td>Photo prints and invitations</td>
+              </tr>
+              <tr>
+                <td>8 x 10 in</td>
+                <td>2400 x 3000 px</td>
+                <td>Portraits and small posters</td>
+              </tr>
+              <tr>
+                <td>8.5 x 11 in</td>
+                <td>2550 x 3300 px</td>
+                <td>Letter-size documents</td>
+              </tr>
+              <tr>
+                <td>11 x 17 in</td>
+                <td>3300 x 5100 px</td>
+                <td>Tabloid posters and spreads</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="process-section verify-section" id="verify" aria-labelledby="verifyTitle">
+        <div class="content-section">
+          <div class="section-heading centered reveal">
+            <p class="eyebrow">Verify after download</p>
+            <h2 id="verifyTitle">How to check image DPI on your computer</h2>
+          </div>
+          <div class="verify-grid">
+            <article class="verify-card reveal">
+              <h3>Windows</h3>
+              <p>
+                Right-click the downloaded JPG or PNG, choose Properties, open Details, and check Horizontal
+                resolution and Vertical resolution.
+              </p>
+            </article>
+            <article class="verify-card reveal">
+              <h3>macOS Preview</h3>
+              <p>
+                Open the image in Preview, choose Tools, then Show Inspector. The DPI value appears under image
+                information when the file contains resolution metadata.
+              </p>
+            </article>
+            <article class="verify-card reveal">
+              <h3>Photoshop or design tools</h3>
+              <p>
+                Open Image Size or Document Properties. Confirm the resolution tag, then check that pixel width
+                and height stayed unchanged.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
       <section class="content-section faq-section" id="faq" aria-labelledby="faqTitle">
         <div class="section-heading reveal">
           <p class="eyebrow">FAQ</p>
@@ -307,7 +427,7 @@
       <div>
         <a class="brand footer-brand" href="#">
           <span class="brand-mark" aria-hidden="true">
-            <span class="brand-mark-inner"></span>
+            <img src="assets/logo/image-dpi-logo-192.png?v=logo-1" alt="" width="32" height="32" />
           </span>
           <span>Image DPI Tool</span>
         </a>
