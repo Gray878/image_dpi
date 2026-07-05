@@ -14,6 +14,7 @@
   var dropZone = document.getElementById("dropZone");
   var fileInput = document.getElementById("fileInput");
   var pickButton = document.getElementById("pickButton");
+  var pasteShortcut = document.getElementById("pasteShortcut");
   var uploadEmpty = document.getElementById("uploadEmpty");
   var uploadPreview = document.getElementById("uploadPreview");
   var previewImage = document.getElementById("previewImage");
@@ -160,6 +161,11 @@
   function setStatus(message, tone) {
     statusLine.textContent = message;
     statusLine.dataset.tone = tone || "neutral";
+  }
+
+  function isEditableTarget(target) {
+    if (!target || !target.closest) return false;
+    return Boolean(target.closest("input, textarea, select, [contenteditable='true']"));
   }
 
   function animateResult() {
@@ -317,18 +323,65 @@
     }
   }
 
-  dropZone.addEventListener("click", function () {
+  function openFileDialog() {
+    fileInput.value = "";
     fileInput.click();
+  }
+
+  function clipboardImageFile(clipboardData) {
+    if (!clipboardData) return null;
+    var files = Array.prototype.slice.call(clipboardData.files || []);
+    var file = files.find(function (item) {
+      return item.type && item.type.startsWith("image/");
+    });
+    if (file) return file;
+
+    var items = Array.prototype.slice.call(clipboardData.items || []);
+    var imageItem = items.find(function (item) {
+      return item.type && item.type.startsWith("image/");
+    });
+    return imageItem ? imageItem.getAsFile() : null;
+  }
+
+  async function readClipboardImage() {
+    dropZone.focus({ preventScroll: true });
+    if (!navigator.clipboard || !navigator.clipboard.read) {
+      setStatus("Focus the upload box, copy an image, then press Ctrl/Cmd + V.", "neutral");
+      return;
+    }
+
+    try {
+      var clipboardItems = await navigator.clipboard.read();
+      for (var itemIndex = 0; itemIndex < clipboardItems.length; itemIndex += 1) {
+        var clipboardItem = clipboardItems[itemIndex];
+        var imageType = clipboardItem.types.find(function (type) {
+          return type.startsWith("image/");
+        });
+        if (imageType) {
+          var blob = await clipboardItem.getType(imageType);
+          var extension = imageType.split("/")[1] || "png";
+          handleFiles([new File([blob], "clipboard-image." + extension, { type: imageType })]);
+          return;
+        }
+      }
+      setStatus("Clipboard does not contain an image. Copy the image itself, then paste again.", "neutral");
+    } catch (error) {
+      setStatus("Press Ctrl/Cmd + V now. The browser did not allow direct clipboard access.", "neutral");
+    }
+  }
+
+  dropZone.addEventListener("click", function () {
+    openFileDialog();
   });
 
   pickButton.addEventListener("click", function () {
-    fileInput.click();
+    fileInput.value = "";
   });
 
   dropZone.addEventListener("keydown", function (event) {
     if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
-      fileInput.click();
+      openFileDialog();
     }
   });
 
@@ -354,14 +407,31 @@
     handleFiles(event.dataTransfer.files);
   });
 
-  document.addEventListener("paste", function (event) {
-    var items = Array.prototype.slice.call(event.clipboardData ? event.clipboardData.items : []);
-    var imageItem = items.find(function (item) {
-      return item.type && item.type.startsWith("image/");
-    });
-    if (imageItem) {
-      var pastedFile = imageItem.getAsFile();
+  window.addEventListener("paste", function (event) {
+    var pastedFile = clipboardImageFile(event.clipboardData);
+    if (pastedFile) {
+      event.preventDefault();
+      setStatus("Pasted an image from the clipboard. Reading DPI metadata...", "neutral");
       handleFiles([pastedFile]);
+    } else if (!isEditableTarget(event.target)) {
+      setStatus("Clipboard does not contain an image. Copy the image itself, then press Ctrl/Cmd + V.", "neutral");
+    }
+  });
+
+  document.addEventListener("keydown", function (event) {
+    var key = event.key ? event.key.toLowerCase() : "";
+    if ((event.ctrlKey || event.metaKey) && key === "v" && !isEditableTarget(event.target)) {
+      dropZone.focus({ preventScroll: true });
+      setStatus("Looking for an image on your clipboard...", "neutral");
+    }
+  });
+
+  pasteShortcut.addEventListener("click", readClipboardImage);
+
+  pasteShortcut.addEventListener("keydown", function (event) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      readClipboardImage();
     }
   });
 
@@ -390,6 +460,11 @@
   document.getElementById("year").textContent = String(new Date().getFullYear());
   updatePrintReadout();
   updateDownloadState();
+  window.setTimeout(function () {
+    if (document.activeElement === document.body) {
+      dropZone.focus({ preventScroll: true });
+    }
+  }, 250);
 
   if (window.gsap && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     window.gsap.from(".reveal", {

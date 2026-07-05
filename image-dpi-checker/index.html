@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Image DPI Checker - Check DPI, Pixels, and Print Size</title>
+    <meta
+      name="description"
+      content="Check image DPI metadata, pixel dimensions, megapixels, aspect ratio, and estimated print size for JPG and PNG images in your browser."
+    />
+    <meta name="application-name" content="Image DPI Tool" />
+    <meta name="theme-color" content="#3f5bf6" />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="Image DPI Checker" />
+    <meta
+      property="og:description"
+      content="Read image DPI metadata and practical print sizes locally in your browser."
+    />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="../assets/logo/favicon.svg?v=logo-2" />
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Main navigation">
+        <a class="brand" href="../" aria-label="Image DPI Tool home">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <div class="nav-links" aria-label="Primary tools">
+          <a href="../#tool">Tool</a>
+          <a href="../image-dpi-converter/">Converter</a>
+          <a href="../convert-image-to-300-dpi/">300 DPI</a>
+          <a href="../300-dpi-print-size-calculator/">Print sizes</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="content">
+      <section class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <p class="eyebrow">Image DPI checker</p>
+            <h1>Check image DPI before printing</h1>
+            <p class="page-lede">
+              Use the Image DPI Checker to read stored DPI metadata, pixel dimensions, megapixels, aspect ratio,
+              and estimated print sizes. JPEG and PNG files are inspected in your browser, so the image does not
+              need to be uploaded.
+            </p>
+            <div class="page-actions">
+              <a class="primary-button" href="../#tool">Open DPI checker</a>
+              <a class="ghost-button" href="../image-dpi-converter/">Change DPI metadata</a>
+            </div>
+          </div>
+          <aside class="page-summary" aria-label="Checker summary">
+            <img class="page-summary-icon" src="../assets/icons/dpi-target.png" alt="" aria-hidden="true" />
+            <strong>Best for inspection</strong>
+            <span>Find whether a file already has 72, 96, 150, 300, or another DPI tag.</span>
+            <span>Estimate physical print size from the actual pixel count.</span>
+            <span>Confirm that a missing DPI tag does not mean the image has no pixels.</span>
+          </aside>
+        </div>
+      </section>
+
+      <div class="article-layout">
+        <aside class="page-index" aria-label="On this page">
+          <span>On this page</span>
+          <a href="#what-it-checks">What it checks</a>
+          <a href="#not-found">DPI not found</a>
+          <a href="#print-size">Print size</a>
+          <a href="#privacy">Privacy</a>
+        </aside>
+
+        <article class="article-flow">
+          <section class="article-block" id="what-it-checks">
+            <p class="article-kicker">Report fields</p>
+            <h2>What the checker reads from your image</h2>
+            <p>
+              The checker looks for resolution metadata in common browser-readable image files. For JPEG, that
+              usually means EXIF or JFIF density tags. For PNG, it means the pHYs chunk that stores pixels per
+              meter. The report also calculates values that come directly from the image dimensions.
+            </p>
+            <ul>
+              <li>Stored DPI metadata, including separate horizontal and vertical values when they differ.</li>
+              <li>Pixel width and height, file size, format, megapixels, and aspect ratio.</li>
+              <li>Estimated print size at 72, 150, 300, 600, and your selected target DPI.</li>
+              <li>Whether the file can be rewritten by the browser-based converter.</li>
+            </ul>
+          </section>
+
+          <section class="article-block article-warning" id="not-found">
+            <h2>What “DPI not found” means</h2>
+            <p>
+              A missing DPI tag is common, especially for images exported for the web. It does not mean the image
+              is low quality by itself. Print sharpness still depends on pixel dimensions divided by the physical
+              print size.
+            </p>
+            <p>
+              If a printer or upload form requires a 300 DPI label, use the converter to add metadata. If the
+              final print needs more detail, you need more pixels or a smaller print size, not only a new DPI tag.
+            </p>
+          </section>
+
+          <section class="article-block" id="print-size">
+            <h2>DPI checker vs print quality</h2>
+            <p>
+              DPI metadata tells print and design software how densely pixels should be placed on paper. The
+              useful calculation is simple: pixels divided by DPI equals inches.
+            </p>
+            <div class="formula-strip">
+              <div class="formula-card">
+                <span>Width</span>
+                <strong>pixels / DPI</strong>
+              </div>
+              <div class="formula-card">
+                <span>Height</span>
+                <strong>pixels / DPI</strong>
+              </div>
+              <div class="formula-card">
+                <span>Example</span>
+                <strong>3000 px / 300 = 10 in</strong>
+              </div>
+            </div>
+          </section>
+
+          <section class="article-block article-callout" id="privacy">
+            <h2>Private by default</h2>
+            <p>
+              The checker runs locally in the browser. That matters when images contain client work, unpublished
+              product shots, scans, or private documents. The page reads the file to calculate the report, then
+              the converter can rewrite JPG or PNG metadata without sending the image to a server.
+            </p>
+          </section>
+        </article>
+      </div>
+
+      <section class="related-section" aria-labelledby="relatedTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Related tools</p>
+          <h2 id="relatedTitle">Next DPI tasks</h2>
+        </div>
+        <div class="tool-link-grid">
+          <a class="tool-link-card" href="../image-dpi-converter/">
+            <span>Converter</span>
+            <strong>Image DPI Converter</strong>
+            <small>Change metadata after checking the original DPI.</small>
+          </a>
+          <a class="tool-link-card" href="../convert-image-to-300-dpi/">
+            <span>300 DPI</span>
+            <strong>Convert Image to 300 DPI</strong>
+            <small>Prepare a common print-ready resolution tag.</small>
+          </a>
+          <a class="tool-link-card" href="../300-dpi-print-size-calculator/">
+            <span>Calculator</span>
+            <strong>300 DPI Print Size Calculator</strong>
+            <small>Check whether your pixels are enough for the print size.</small>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="../">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <p>Browser-based image DPI checker and metadata converter.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../#tool">Tool</a>
+        <a href="../image-dpi-converter/">Converter</a>
+        <a href="../jpg-dpi-converter/">JPG DPI</a>
+        <a href="../png-dpi-converter/">PNG DPI</a>
+      </div>
+      <p class="copyright">Copyright 2026 Image DPI Tool.</p>
+    </footer>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Image DPI Checker",
+        "description": "Check image DPI metadata, pixel dimensions, megapixels, aspect ratio, and estimated print size for JPG and PNG images in your browser.",
+        "isPartOf": {
+          "@type": "WebSite",
+          "name": "Image DPI Tool"
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PNG DPI Converter - Change PNG pHYs DPI Metadata</title>
+    <meta
+      name="description"
+      content="Change PNG DPI metadata in your browser. Add or replace the PNG pHYs density chunk to 300 DPI or a custom value without uploading."
+    />
+    <meta name="application-name" content="Image DPI Tool" />
+    <meta name="theme-color" content="#3f5bf6" />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="PNG DPI Converter" />
+    <meta
+      property="og:description"
+      content="Update PNG pHYs density metadata locally while keeping pixels and transparency intact."
+    />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="../assets/logo/favicon.svg?v=logo-2" />
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Main navigation">
+        <a class="brand" href="../" aria-label="Image DPI Tool home">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <div class="nav-links" aria-label="Primary tools">
+          <a href="../#tool">Tool</a>
+          <a href="../image-dpi-checker/">Checker</a>
+          <a href="../image-dpi-converter/">Converter</a>
+          <a href="../jpg-dpi-converter/">JPG DPI</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="content">
+      <section class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <p class="eyebrow">PNG DPI converter</p>
+            <h1>Change PNG DPI metadata in the browser</h1>
+            <p class="page-lede">
+              Add or replace PNG density metadata for screenshots, transparent graphics, exported artwork, and
+              flat images. The converter writes a pHYs chunk so apps can read the intended DPI value.
+            </p>
+            <div class="page-actions">
+              <a class="primary-button" href="../#tool">Convert PNG DPI</a>
+              <a class="ghost-button" href="../jpg-dpi-converter/">Need JPG instead?</a>
+            </div>
+          </div>
+          <aside class="page-summary" aria-label="PNG summary">
+            <img class="page-summary-icon" src="../assets/icons/local-privacy.png" alt="" aria-hidden="true" />
+            <strong>PNG pHYs metadata</strong>
+            <span>Stores density as pixels per meter, which maps to DPI.</span>
+            <span>Useful for transparent artwork and screen exports.</span>
+            <span>Metadata-only conversion keeps pixel size and transparency.</span>
+          </aside>
+        </div>
+      </section>
+
+      <div class="article-layout">
+        <aside class="page-index" aria-label="On this page">
+          <span>On this page</span>
+          <a href="#metadata">PNG pHYs</a>
+          <a href="#steps">Steps</a>
+          <a href="#transparency">Transparency</a>
+          <a href="#uses">Use cases</a>
+        </aside>
+
+        <article class="article-flow">
+          <section class="article-block" id="metadata">
+            <p class="article-kicker">PNG DPI</p>
+            <h2>How PNG stores DPI</h2>
+            <p>
+              PNG does not store DPI in the same way as JPEG EXIF. It can store physical pixel density in a pHYs
+              chunk. When the unit is meters, software can translate pixels per meter into DPI.
+            </p>
+            <p>
+              This converter adds or replaces that pHYs data with the selected target value, such as 300 DPI.
+            </p>
+          </section>
+
+          <section class="article-block" id="steps">
+            <h2>How to change PNG DPI</h2>
+            <ol>
+              <li>Open the main tool and upload a .png file.</li>
+              <li>Check whether the PNG already has pHYs density metadata.</li>
+              <li>Choose a target DPI value, usually 300 for print workflows.</li>
+              <li>Download the rewritten PNG and verify the density in your design app.</li>
+            </ol>
+          </section>
+
+          <section class="article-block article-callout" id="transparency">
+            <h2>Pixels and transparency stay intact</h2>
+            <p>
+              Metadata-only PNG conversion does not flatten the image, change the canvas size, or remove
+              transparency. It changes the density metadata that compatible apps use to calculate physical size.
+            </p>
+          </section>
+
+          <section class="article-block" id="uses">
+            <h2>Common PNG DPI use cases</h2>
+            <ul>
+              <li>Transparent logos that need a 300 DPI tag for layout software.</li>
+              <li>Digital artwork exported as PNG but submitted to a print workflow.</li>
+              <li>Screenshots or UI captures that need predictable physical dimensions in a document.</li>
+              <li>Flat illustrations where lossless pixels matter more than JPEG compression.</li>
+            </ul>
+          </section>
+        </article>
+      </div>
+
+      <section class="related-section" aria-labelledby="relatedTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Related tools</p>
+          <h2 id="relatedTitle">Check and calculate PNG output</h2>
+        </div>
+        <div class="tool-link-grid">
+          <a class="tool-link-card" href="../image-dpi-checker/">
+            <span>Checker</span>
+            <strong>Image DPI Checker</strong>
+            <small>See whether your PNG already has a density tag.</small>
+          </a>
+          <a class="tool-link-card" href="../convert-image-to-300-dpi/">
+            <span>300 DPI</span>
+            <strong>Convert Image to 300 DPI</strong>
+            <small>Use the common print target.</small>
+          </a>
+          <a class="tool-link-card" href="../300-dpi-print-size-calculator/">
+            <span>Print size</span>
+            <strong>300 DPI Print Size Calculator</strong>
+            <small>Calculate the physical size from PNG pixels.</small>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="../">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <p>Browser-based image DPI checker and metadata converter.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../#tool">Tool</a>
+        <a href="../image-dpi-checker/">Checker</a>
+        <a href="../image-dpi-converter/">Converter</a>
+        <a href="../jpg-dpi-converter/">JPG DPI</a>
+      </div>
+      <p class="copyright">Copyright 2026 Image DPI Tool.</p>
+    </footer>
+  </body>
+</html>

@@ -61,6 +61,7 @@
         </div>
 
         <section class="tool-stage reveal" aria-label="Image DPI upload and report">
+          <input id="fileInput" class="file-input-native" type="file" accept="image/*" />
           <div
             class="drop-zone"
             id="dropZone"
@@ -68,7 +69,6 @@
             role="button"
             aria-label="Choose, drop, or paste an image"
           >
-            <input id="fileInput" type="file" accept="image/*" hidden />
             <div class="upload-empty" id="uploadEmpty">
               <img class="upload-illustration" src="assets/icons/upload-files.png" alt="" aria-hidden="true" />
               <div>
@@ -87,11 +87,19 @@
 
           <div class="upload-actions" aria-label="Upload alternatives">
             <span>or</span>
-            <button class="pick-pill" id="pickButton" type="button">Choose image</button>
+            <label class="pick-pill" id="pickButton" for="fileInput">Choose image</label>
             <span>or press</span>
-            <kbd>Ctrl</kbd>
-            <span>+</span>
-            <kbd>V</kbd>
+            <span
+              class="paste-shortcut"
+              id="pasteShortcut"
+              role="button"
+              tabindex="0"
+              aria-label="Focus the page and paste an image from the clipboard"
+            >
+              <kbd id="pasteModifierKey">Ctrl</kbd>
+              <span>+</span>
+              <kbd>V</kbd>
+            </span>
           </div>
 
           <div class="status-line" id="statusLine" role="status" aria-live="polite">
@@ -342,6 +350,49 @@
         </div>
       </section>
 
+      <section class="content-section guide-section" id="guides" aria-labelledby="guidesTitle">
+        <div class="section-heading reveal">
+          <p class="eyebrow">DPI tools and guides</p>
+          <h2 id="guidesTitle">Find the right DPI workflow</h2>
+          <p>
+            Use these focused pages when you need a checker, a converter, a 300 DPI workflow, or a print-size
+            calculation before downloading your image.
+          </p>
+        </div>
+        <div class="guide-grid">
+          <a class="guide-card reveal" href="image-dpi-checker/">
+            <span>Checker</span>
+            <strong>Image DPI Checker</strong>
+            <small>Read stored DPI metadata, pixels, print size, and file details.</small>
+          </a>
+          <a class="guide-card reveal" href="image-dpi-converter/">
+            <span>Converter</span>
+            <strong>Image DPI Converter</strong>
+            <small>Change JPG or PNG DPI metadata without changing pixels.</small>
+          </a>
+          <a class="guide-card reveal" href="convert-image-to-300-dpi/">
+            <span>300 DPI</span>
+            <strong>Convert Image to 300 DPI</strong>
+            <small>Prepare a 300 DPI tag for print shops and submission forms.</small>
+          </a>
+          <a class="guide-card reveal" href="jpg-dpi-converter/">
+            <span>JPG</span>
+            <strong>JPG DPI Converter</strong>
+            <small>Update JPEG JFIF or EXIF resolution metadata locally.</small>
+          </a>
+          <a class="guide-card reveal" href="png-dpi-converter/">
+            <span>PNG</span>
+            <strong>PNG DPI Converter</strong>
+            <small>Add or replace PNG pHYs density metadata in the browser.</small>
+          </a>
+          <a class="guide-card reveal" href="300-dpi-print-size-calculator/">
+            <span>Print size</span>
+            <strong>300 DPI Print Size Calculator</strong>
+            <small>Calculate inches and pixels for common print sizes.</small>
+          </a>
+        </div>
+      </section>
+
       <section class="process-section verify-section" id="verify" aria-labelledby="verifyTitle">
         <div class="content-section">
           <div class="section-heading centered reveal">
@@ -438,8 +489,10 @@
       </div>
       <div class="footer-links">
         <a href="#tool">Image DPI Checker</a>
-        <a href="#tool">300 DPI Converter</a>
+        <a href="image-dpi-converter/">300 DPI Converter</a>
         <a href="#print-size">Print Size Calculator</a>
+        <a href="jpg-dpi-converter/">JPG DPI</a>
+        <a href="png-dpi-converter/">PNG DPI</a>
         <a href="#verify">Verify DPI</a>
         <a href="#dpi">DPI Guide</a>
         <a href="#faq">FAQ</a>

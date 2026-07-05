@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>JPG DPI Converter - Change JPEG DPI Metadata Online</title>
+    <meta
+      name="description"
+      content="Change JPG DPI metadata in your browser. Update JPEG JFIF or EXIF resolution tags to 300 DPI or a custom value without uploading."
+    />
+    <meta name="application-name" content="Image DPI Tool" />
+    <meta name="theme-color" content="#3f5bf6" />
+    <meta name="robots" content="index,follow" />
+    <meta property="og:title" content="JPG DPI Converter" />
+    <meta
+      property="og:description"
+      content="Update JPEG DPI metadata locally while keeping the same pixel dimensions."
+    />
+    <meta property="og:type" content="article" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" type="image/svg+xml" href="../assets/logo/favicon.svg?v=logo-2" />
+    <link rel="stylesheet" href="../assets/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#content">Skip to content</a>
+
+    <header class="site-header">
+      <nav class="nav-shell" aria-label="Main navigation">
+        <a class="brand" href="../" aria-label="Image DPI Tool home">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <div class="nav-links" aria-label="Primary tools">
+          <a href="../#tool">Tool</a>
+          <a href="../image-dpi-checker/">Checker</a>
+          <a href="../image-dpi-converter/">Converter</a>
+          <a href="../png-dpi-converter/">PNG DPI</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="content">
+      <section class="page-hero">
+        <div class="page-hero-inner">
+          <div>
+            <p class="eyebrow">JPG DPI converter</p>
+            <h1>Change JPEG DPI metadata locally</h1>
+            <p class="page-lede">
+              Update JPG resolution metadata for photos, scans, and compressed images. The browser-based converter
+              can set a JPEG to 300 DPI or another target value while preserving the original pixel dimensions.
+            </p>
+            <div class="page-actions">
+              <a class="primary-button" href="../#tool">Convert JPG DPI</a>
+              <a class="ghost-button" href="../convert-image-to-300-dpi/">Use 300 DPI workflow</a>
+            </div>
+          </div>
+          <aside class="page-summary" aria-label="JPG summary">
+            <img class="page-summary-icon" src="../assets/icons/print-quality.png" alt="" aria-hidden="true" />
+            <strong>JPEG metadata support</strong>
+            <span>Reads EXIF and JFIF resolution tags when present.</span>
+            <span>Writes a browser-generated copy with the selected DPI value.</span>
+            <span>Useful for photos, scans, product images, and submission files.</span>
+          </aside>
+        </div>
+      </section>
+
+      <div class="article-layout">
+        <aside class="page-index" aria-label="On this page">
+          <span>On this page</span>
+          <a href="#metadata">JPEG metadata</a>
+          <a href="#steps">Steps</a>
+          <a href="#quality">Quality</a>
+          <a href="#verify">Verify</a>
+        </aside>
+
+        <article class="article-flow">
+          <section class="article-block" id="metadata">
+            <p class="article-kicker">JPEG DPI</p>
+            <h2>Where JPG DPI is stored</h2>
+            <p>
+              JPEG files can store print density in JFIF headers, EXIF resolution tags, or both. Some files do not
+              store a DPI value at all. The checker reports what it finds, and the converter writes a copy with
+              updated browser-readable density metadata.
+            </p>
+          </section>
+
+          <section class="article-block" id="steps">
+            <h2>How to change JPG DPI</h2>
+            <ol>
+              <li>Open the main tool and choose a .jpg or .jpeg file.</li>
+              <li>Read the current DPI report and estimated print size.</li>
+              <li>Choose 300 DPI or enter another target value.</li>
+              <li>Download the converted JPG and verify it in your desktop app.</li>
+            </ol>
+          </section>
+
+          <section class="article-block article-warning" id="quality">
+            <h2>Changing JPG DPI is not the same as upscaling</h2>
+            <p>
+              A JPEG can have a 300 DPI tag and still be too small for a large print. If your file is 1200 x 1200
+              px, it is 4 x 4 inches at 300 DPI. For a larger sharp print, start with more pixels or use a separate
+              resampling workflow.
+            </p>
+          </section>
+
+          <section class="article-block article-callout" id="verify">
+            <h2>How to verify a converted JPG</h2>
+            <p>
+              On Windows, check Properties and Details. On macOS, open the file in Preview and use Show Inspector.
+              In Photoshop, compare Image Size before and after: the resolution should change, while pixel width
+              and height should remain the same.
+            </p>
+          </section>
+        </article>
+      </div>
+
+      <section class="related-section" aria-labelledby="relatedTitle">
+        <div class="section-heading">
+          <p class="eyebrow">Related tools</p>
+          <h2 id="relatedTitle">More DPI workflows</h2>
+        </div>
+        <div class="tool-link-grid">
+          <a class="tool-link-card" href="../png-dpi-converter/">
+            <span>PNG</span>
+            <strong>PNG DPI Converter</strong>
+            <small>Use for transparent art, screenshots, and flat graphics.</small>
+          </a>
+          <a class="tool-link-card" href="../image-dpi-checker/">
+            <span>Checker</span>
+            <strong>Image DPI Checker</strong>
+            <small>Inspect a JPEG before conversion.</small>
+          </a>
+          <a class="tool-link-card" href="../300-dpi-print-size-calculator/">
+            <span>Print size</span>
+            <strong>300 DPI Print Size Calculator</strong>
+            <small>Estimate how large the JPG can print.</small>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div>
+        <a class="brand footer-brand" href="../">
+          <span class="brand-mark" aria-hidden="true"><span class="brand-mark-inner"></span></span>
+          <span>Image DPI Tool</span>
+        </a>
+        <p>Browser-based image DPI checker and metadata converter.</p>
+      </div>
+      <div class="footer-links">
+        <a href="../#tool">Tool</a>
+        <a href="../image-dpi-checker/">Checker</a>
+        <a href="../image-dpi-converter/">Converter</a>
+        <a href="../png-dpi-converter/">PNG DPI</a>
+      </div>
+      <p class="copyright">Copyright 2026 Image DPI Tool.</p>
+    </footer>
+  </body>
+</html>
